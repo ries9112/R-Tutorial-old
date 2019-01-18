@@ -6,6 +6,6 @@ This tutorial was made for my young italian cousins who don't have access to ver
 
 # [English Version](https://resclapon.com/r-tutorial/)
 
-**The code should be the same, but the english version is not currently working, need to figure out what's going on.**
+**The code should be the same, but the english version is not saving variables correctly, need to figure out what's going on.**
 
 ![](R-Tutorial_ENG.gif)
