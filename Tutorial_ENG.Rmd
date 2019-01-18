@@ -1,0 +1,357 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+source('FortniteScript.R')
+source('SQL_Connector.R') #This is not made available and is part of the .gitignore file
+library(learnr)
+library(DT)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Basics of the R programming language
+
+### Welcome to this R tutorial!
+
+In this tutorial, you will be able to execute R code by pressing the blue button that reads **"Run Code"**. You can also press on the **"Solution"** button, make changes and press Run Code again.
+
+### Creating an element
+
+We can get the result of "2+2" by writing exactly that
+```{r basicMath, exercise=TRUE} 
+2+2
+```
+
+```{r basicMath-solution}
+(((2+2)*17)/3)^5
+```
+
+If we want to save a result into a variable of any kind, we can do su using an arrow symbol **<-** or an equals sign **=**
+```{r, echo=TRUE}
+variable <- 2+2
+```
+
+Now try writing **variable** (case sensitive) and press the button "Run Code" to view the contents
+```{r basicVar, exercise=TRUE}
+
+```
+
+```{r basicVar-solution}
+variable
+```
+
+What are the contents of the element "**text**"?
+```{r, echo=FALSE}
+text <- "you can save character values like this one"
+```
+
+
+```{r basicVarText, exercise=TRUE}
+
+```
+
+```{r domanda, echo=FALSE}
+question("What are the contents of the element 'text'?",
+         answer('12', message= 'Try again'),
+         answer('language', message="Not this one"),
+         answer('5', message='Nope'),
+         answer('you can save character values like this one', correct=TRUE), 
+         allow_retry = TRUE)
+```
+
+
+## Fortnite 
+
+### Fortnite Statistics
+
+These statistics are collected online when the application starts.
+
+These are the statistics for Michele's (my Italian cousin) Fortnite matches.
+
+```{r, echo=TRUE}
+Michele
+```
+
+### Now you try!
+
+Write **Jacopo** and press the button on the right that says **Run Code** to view his statistics. You can also write **Ninja**. <br/> <br/> 
+To show the data **you NEED to press "Run Code"** (or ctrl+enter). <br/> 
+In this case, the elements were written with the first letter capitalized so they must be capitalized.
+
+```{r fortniteShow, exercise=TRUE, exercise.lines = 5}
+
+```
+
+
+```{r fortniteShow-solution}
+Jacopo
+```
+
+
+```{r letter-a, echo=FALSE}
+question("Who is the best player?",
+         answer('Jacopo', message= 'Whoops...'),
+         answer('Michele', message='Try again...'),
+         answer('Riccardo', correct=TRUE),
+         answer('Ninja', message= 'Almost...'), 
+         allow_retry = TRUE)
+```
+
+
+## Functions
+
+```{r, echo=FALSE}
+
+queryWeapons <- "SELECT * FROM FortniteWeapons"
+FortniteWeapons <- dbFetch(dbSendQuery(conn,queryWeapons),999999)
+
+#Disconnect
+dbClearResult(dbListResults(conn)[[1]])
+dbDisconnect(conn)
+
+FortniteWeapons$Rarity <- factor(FortniteWeapons$Rarity,levels=c("Common","Uncommon","Rare","Epic","Legendary"),ordered=TRUE)
+
+
+FortniteWeapons
+
+```
+
+### Now we are using a different and cleaner table: "FortniteWeapons" (above)
+
+When programming in R, we can take other people's much more complicated code and use it in a much simpler way using **functions**. For example, if we want a list of the column names, instead of writing difficult code that finds those values, we can simply use a function called "names", and give the name of the table as the only argument in the function. In this example, the code to find the column names is simply: "names(FortniteWeapons)", which you can execute right below.
+
+```{r, echo=TRUE}
+names(FortniteWeapons)
+```
+
+### How many rows are there?
+
+```{r, echo=TRUE}
+nrow(FortniteWeapons)
+```
+
+### How many columns?
+
+```{r, echo=TRUE}
+ncol(FortniteWeapons)
+```
+
+### How can you figure out the arguments for a function?
+
+When you don't know what arguments to put into a function (or to get some examples), you can consult the documentation. To open the documentation for the function you are interersted in, you can write "help(function)" or "?function".
+
+```{r helpex, exercise=TRUE}
+help(nrow)
+```
+
+
+## Variables
+
+In the previous exercise, we had a table with several columns. For example, each row of data has a weapon "Name" value . To access the name column, we can write the code: FortniteWeapons\$Name <br/> 
+
+To access variables from a table-like structure, you write the name of the table and the name of the column with a dollar sign in the middle: Table$Column
+
+```{r, echo=TRUE}
+FortniteWeapons$Name
+```
+
+Now try to adapt the code below to show the column "Rarity". If you are not sure, you can view the solution by pressing on the "Solution" button. Once you change the code, **remember to press "Run Code"**!
+
+```{r weaponVar, exercise=TRUE}
+FortniteWeapons$Name
+```
+
+
+```{r weaponVar-solution}
+FortniteWeapons$Rarity
+```
+
+
+## Visualize the Data
+
+We now have everything we need to start making some cool visualizations! <br/> 
+
+Instead of programming every aspect of the visualizations, we can get a quicker start by using functions written by others and applying them to our data and problem, in the same exact way that we did earlier with "names(FortniteWeapons)" to get the names of the columns. This time the result will be a chart, and the function will ask for more than a single argument. <br/> 
+
+In this first example, we are creating a really simple chart using the function"qplot" (which stands for "quick plot"). The function qplot needs to be given two arguments, one for "x" and one for "y", which are the two axis for the chart. For each axis, we assign it a variable using the function: "qplot(x,y)". <br/> 
+
+In this example we are comparing the variables "Damage"(x) and "Range"(y). If you change the name of either variable to a different column name and press "Run Code" again, the chart will update.
+
+```{r weaponQplot, exercise=TRUE}
+qplot(FortniteWeapons$Damage, FortniteWeapons$Range )
+
+```
+
+```{r weaponQplot-solution}
+qplot(FortniteWeapons$Damage, FortniteWeapons$Rarity )
+
+```
+
+### ggplotly() is a function that makes charts interactive!
+
+Try passing your mouse on the points. Like before, we are using a function ("ggplotly" in this case), and in this case it takes the chart we created previously using qplot as its only argument. <br/>
+
+Press on "Solution" to view an alternative way to write this same code.
+
+```{r weaponQplotly, exercise=TRUE}
+ggplotly( qplot(FortniteWeapons$Damage,FortniteWeapons$Range) )
+
+```
+
+```{r weaponQplotly-solution}
+#This first line assigns the chart we created earlier to the variable "vis"
+vis <- qplot(FortniteWeapons$Damage, FortniteWeapons$Range )
+
+#This second line uses the new variable that contains the chart and makes it interactive
+ggplotly(vis)
+
+```
+
+
+### Now some more difficult examples
+
+```{r weaponGGplot, exercise=TRUE}
+ggplotly(
+  ggplot(FortniteWeapons,aes(x=Damage, y=FindChancePercent ) ) +
+  geom_point(aes(colour=FortniteWeapons$Rarity, text=paste('Name:',FortniteWeapons$Name))) + 
+  facet_grid( Rarity ~ . ) + 
+  ggtitle("Damage Vs. Percent Likelihood to Find By Rarity(colors)") + 
+  labs(colour = "Rarity",x='Damage',y='')
+)
+
+```
+
+```{r weaponGGplot-solution}
+ggplotly(
+  ggplot(FortniteWeapons,aes(x=Damage, y=FireRate ) ) +
+  geom_point(aes(colour=FortniteWeapons$Rarity, text=paste('Name:',FortniteWeapons$Name))) + 
+  facet_grid( Rarity ~ . ) + 
+  ggtitle("Damage Vs. Fire Rate By Rarity(colors)") + 
+  labs(colour = "Rarity",x='Damage',y='')
+)
+```
+
+<!-- ADD MORE EXAMPLES HERE!!! -->
+
+```{r weaponGG3d,exercise=TRUE}
+
+plot_ly(FortniteWeapons, x =~Rarity, y =~Damage, z = ~FindChancePercent, color = ~Rarity,text =      paste("Name:", FortniteWeapons$Name)) %>%
+    add_markers() %>%
+    layout(scene = list(xaxis = list(title = "Rarity"),
+                                                                     yaxis = list(title = 'Damage'),
+                                                                     zaxis = list(title = 'Percent Likelihood to Find')))
+
+```
+
+```{r weaponGG3d-solution}
+
+plot_ly(FortniteWeapons, x =~Rarity, y =~Damage, z = ~FireRate, color = ~Rarity,text =      paste("Name:", FortniteWeapons$Name)) %>%
+    add_markers() %>%
+    layout(scene = list(xaxis = list(title = "Rarity"),
+                                                                     yaxis = list(title = 'Damage'),
+                                                                     zaxis = list(title = 'Fire Rate')))
+
+```
+
+
+
+## Filter the Data
+
+### Subsetting (Filtering)
+
+There are several ways of creating smaller segments of our data based on filters. This first method uses the function "subset". This function needs to be given the name of the table, as well as the filter condition to apply to the table. Look at the example below which returns a copy of the table with only the points with the name "Rocket Launcher".
+
+```{r, echo=TRUE}
+subset(FortniteWeapons, Name=='Rocket Launcher')
+```
+
+If we don't want to use the subset function, we can use "indexing" to achieve the same result using base R and not relying on any outside functions.
+```{r, echo=TRUE}
+FortniteWeapons[FortniteWeapons[,'Name']=='Rocket Launcher',]
+```
+<br/> 
+
+**Indexing logic: table[rows,columns]**
+
+Indexing using the row number:
+```{r, echo=TRUE}
+FortniteWeapons[5,]
+```
+
+```{r, echo=TRUE}
+FortniteWeapons[1:5,]
+```
+
+Indexing using the column number
+```{r, echo=TRUE}
+FortniteWeapons[,2]
+```
+
+
+```{r weaponSubset, exercise=TRUE}
+#In the first row we create a new table which only has weapons that have a chance of being found that is lower than 5%
+FortniteWeaponsSub <- subset(FortniteWeapons, FindChancePercent < 5)
+
+#Now let's create a chart exactly like before but with the new data
+ggplotly(
+  ggplot(FortniteWeaponsSub,aes(x=Damage, y=FindChancePercent ) ) +
+  geom_point(aes(colour=FortniteWeaponsSub$Rarity, text=paste('Name:',FortniteWeaponsSub$Name))) + 
+  facet_grid( Rarity ~ . ) + 
+  ggtitle("Damage Vs. Percent Likelihood to Find By Rarity(colors)") + 
+  labs(colour = "Rarity",x='Damage',y='')
+)
+
+```
+
+```{r weaponSubset-solution}
+FortniteWeaponsSub <- subset(FortniteWeapons, Rarity=='Legendary')
+
+ggplotly(
+  ggplot(FortniteWeaponsSub,aes(x=FireRate, y=VerticalRecoil ) ) +
+  geom_point(aes(colour=FortniteWeaponsSub$Name)) + 
+  ggtitle("Legendary Weapons Fire Rate Vs. Recoil") + 
+  labs(colour = "Name",x='Fire Rate',y='Vertical Recoil')
+)
+
+```
+
+
+<!-- ## Resources and Tutorials (Italian) -->
+
+<!-- - [Really good tutorial](https://www.datacamp.com/community/open-courses/introduzione-a-r#gs.3Jg7Wbo) -->
+
+<!-- - [Difficult but complete guide](https://cran.r-project.org/doc/contrib/nozioniR.pdf) -->
+
+<!-- - [Paid course](https://www.udemy.com/introduzione-a-r/?couponCode=DATAWIRING_SPECIAL) -->
+
+<!-- - [How to affect a Minecraft environment using R programming](https://ropenscilabs.github.io/miner_book/index.html) -->
+
+
+## Resources and Tutorials
+
+- [DataCamp has really good R courses](https://www.datacamp.com/courses/free-introduction-to-r)
+
+- [Quick R tutorial](https://www.statmethods.net/r-tutorial/index.html)
+
+- [Hands on tutorial](https://www.cyclismo.org/tutorial/R/)
+
+- [Good Examples](https://www.tutorialspoint.com/r/r_decision_tree.htm)
+
+
+## How can I this on my computer?
+
+- The first thing to do is to install R on your computer [from this link](https://cran.cnr.berkeley.edu/)
+
+- Now install the application "RStudio" [from this link](https://www.rstudio.com/products/rstudio/download/#download)
+
+- Start R studio to start programming!
+
+- Work through other resources and tutorials.
+
+
+
+
