@@ -1,7 +1,7 @@
 
 # [English Version](https://rstudio.cloud/project/179170)
 
-[The english version of the tutorial is only working locally currently. Launch the application from the linked RStudio session (or use the link to the Italian one).](https://rstudio.cloud/project/179170)
+[The english version of the tutorial is only working locally currently. Launch the application from the linked RStudio session (or use the link to the working Italian shiny application).](https://rstudio.cloud/project/179170)
 
 ![](R-Studio.gif)
 
