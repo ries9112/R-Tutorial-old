@@ -9,7 +9,7 @@ This tutorial was made for my young italian cousins who don't have access to ver
 
 ![](IT_R-Tutorial.gif)
 
-[Launch your own RStudio Cloud session with everything already pre-installed. You will be able to make changes and come back to your saved private session from any device at any time](https://rstudio.cloud/project/179170)
+## [Launch your own RStudio Cloud session with everything already pre-installed. You will be able to make changes and come back to your saved private session from any device at any time](https://rstudio.cloud/project/179170)
 
 
 ![](R-Studio.gif)
