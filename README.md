@@ -1,3 +1,4 @@
+(the shinyapps linked below don't currently work)
 
 # [English Version](https://resclapon.com/r-tutorial/)
 
